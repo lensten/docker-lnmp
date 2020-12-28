@@ -1,6 +1,6 @@
 docker-lnmp
 ===========
-Deploy lnmp(Linux, Nginx, MySQL, PHP7) using docker-compose.
+Deploy lnmp(Linux, Nginx1.18, MySQL5.7, PHP7.4) using docker-compose.
 
 
 Building and running
