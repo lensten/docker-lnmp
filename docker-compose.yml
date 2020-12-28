@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+
+  mysql57:
+    image: mysql:5.7
+    container_name: mysql57
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis:6.0-alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+
+  php74:
+    build: ./php74
+    image: php74
+    container_name: php74
+    restart: always
+    volumes:
+      - ./data/www:/data/www
+    depends_on:
+      - mysql57
+      - redis
+
+  nginx:
+    image: nginx:1.18-alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/cert:/etc/nginx/cert
+      - ./data/www:/data/www
+    depends_on:
+      - php74
